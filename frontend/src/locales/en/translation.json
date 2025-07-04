@@ -32,6 +32,29 @@
     "generating": "Generating manual...",
     "completed": "Completed"
   },
+  "manual": {
+    "title": "Operation Manual",
+    "language": "Language",
+    "detailLevel": "Detail Level",
+    "createdAt": "Created",
+    "languages": {
+      "ja": "Japanese",
+      "en": "English"
+    },
+    "detailLevels": {
+      "simple": "Simple",
+      "detailed": "Detailed"
+    }
+  },
+  "processing": {
+    "inProgress": "Processing",
+    "errorOccurred": "An error occurred",
+    "completed": "Manual generation completed.",
+    "retry": "Retry",
+    "showDetails": "Show technical details",
+    "timestamp": "Timestamp",
+    "errorDetails": "Error details"
+  },
   "errors": {
     "fileTooLarge": "File size exceeds 500MB",
     "invalidFormat": "Unsupported file format",

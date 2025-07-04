@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { CheckCircle, AlertCircle } from 'lucide-react'
-import { ProgressBar } from '@/components/common/ProgressBar'
+import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import { Loading } from '@/components/common/Loading'
 import type { ProcessingStatus as ProcessingStatusType } from '@/types/manual.types'
 
@@ -53,16 +52,15 @@ export const ProcessingStatus: React.FC<ProcessingStatusProps> = ({
       <div className="flex items-center space-x-3 mb-4">
         {getIcon()}
         <h3 className="text-lg font-medium text-gray-900">
-          {status.stage === 'error' ? 'エラーが発生しました' : '処理中'}
+          {status.stage === 'error' ? t('processing.errorOccurred') : t('processing.inProgress')}
         </h3>
       </div>
 
-      {status.stage !== 'error' && (
-        <ProgressBar
-          progress={status.progress}
-          message={getStageMessage(status.stage)}
-          className="mb-4"
-        />
+      {status.stage !== 'error' && status.stage !== 'completed' && (
+        <div className="flex items-center space-x-3 p-4 bg-blue-50 rounded-md">
+          <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />
+          <span className="text-blue-700 text-sm">{getStageMessage(status.stage)}</span>
+        </div>
       )}
 
       {status.stage === 'error' && (
@@ -70,16 +68,16 @@ export const ProcessingStatus: React.FC<ProcessingStatusProps> = ({
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h4 className="text-red-800 font-medium text-sm mb-1">
-                エラーが発生しました
+                {t('processing.errorOccurred')}
               </h4>
               <p className="text-red-700 text-sm mb-3">{status.message}</p>
               <details className="text-xs text-red-600">
                 <summary className="cursor-pointer hover:text-red-800">
-                  技術的な詳細を表示
+                  {t('processing.showDetails')}
                 </summary>
                 <div className="mt-2 p-2 bg-red-100 rounded text-xs font-mono">
-                  タイムスタンプ: {new Date().toLocaleString()}<br/>
-                  エラー内容: {status.message}
+                  {t('processing.timestamp')}: {new Date().toLocaleString()}<br/>
+                  {t('processing.errorDetails')}: {status.message}
                 </div>
               </details>
             </div>
@@ -88,7 +86,7 @@ export const ProcessingStatus: React.FC<ProcessingStatusProps> = ({
                 onClick={onRetry}
                 className="ml-3 px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               >
-                再試行
+                {t('processing.retry')}
               </button>
             )}
           </div>
@@ -98,7 +96,7 @@ export const ProcessingStatus: React.FC<ProcessingStatusProps> = ({
       {status.stage === 'completed' && (
         <div className="bg-green-50 border border-green-200 rounded-md p-3">
           <p className="text-green-700 text-sm">
-            マニュアルの生成が完了しました。
+            {t('processing.completed')}
           </p>
         </div>
       )}

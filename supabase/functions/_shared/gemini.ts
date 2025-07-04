@@ -32,7 +32,7 @@ export async function analyzeVideoWithGemini(request: GeminiRequest): Promise<Ge
     const prompt = createPrompt(request)
     const analysisResult = await generateContent(fileUri, prompt)
     
-    return parseGeminiResponse(analysisResult)
+    return parseGeminiResponse(analysisResult, request.language)
   } catch (error) {
     console.error('Gemini API error:', error)
     throw error
@@ -211,11 +211,27 @@ async function generateContent(fileUri: string, prompt: string): Promise<string>
 
   const data = await response.json()
   
-  if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
-    throw new Error('Invalid response from Gemini API')
+  console.log('Gemini API response:', JSON.stringify(data, null, 2))
+  
+  // レスポンス構造をチェック
+  if (!data.candidates || !Array.isArray(data.candidates) || data.candidates.length === 0) {
+    console.error('No candidates in response:', data)
+    throw new Error('Invalid response from Gemini API: No candidates found')
+  }
+  
+  const candidate = data.candidates[0]
+  if (!candidate.content || !candidate.content.parts || !Array.isArray(candidate.content.parts) || candidate.content.parts.length === 0) {
+    console.error('Invalid candidate structure:', candidate)
+    throw new Error('Invalid response from Gemini API: Invalid candidate structure')
+  }
+  
+  const part = candidate.content.parts[0]
+  if (!part.text) {
+    console.error('No text in part:', part)
+    throw new Error('Invalid response from Gemini API: No text content found')
   }
 
-  return data.candidates[0].content.parts[0].text
+  return part.text
 }
 
 function createPrompt(request: GeminiRequest): string {
@@ -303,26 +319,51 @@ Notes:
   }
 }
 
-function parseGeminiResponse(text: string): GeminiResponse {
+function parseGeminiResponse(text: string, language: 'ja' | 'en' = 'ja'): GeminiResponse {
   console.log('Parsing Gemini response...')
   
   try {
-    // JSONレスポンスをパース
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
-      throw new Error('No JSON found in response')
+    let jsonText = text
+    
+    // ```json ブロックから JSON を抽出
+    const codeBlockMatch = text.match(/```json\s*([\s\S]*?)\s*```/)
+    if (codeBlockMatch) {
+      jsonText = codeBlockMatch[1]
+      console.log('Extracted JSON from code block')
+    } else {
+      // 通常のJSONマッチ
+      const jsonMatch = text.match(/\{[\s\S]*\}/)
+      if (!jsonMatch) {
+        throw new Error('No JSON found in response')
+      }
+      jsonText = jsonMatch[0]
     }
 
-    const jsonData = JSON.parse(jsonMatch[0])
+    console.log('JSON text to parse:', jsonText.substring(0, 500) + '...')
+    const jsonData = JSON.parse(jsonText)
+    
+    // 言語に応じたヘッダーテキスト
+    const headers = {
+      ja: {
+        overview: '概要',
+        steps: '手順'
+      },
+      en: {
+        overview: 'Overview',
+        steps: 'Steps'
+      }
+    }
+    
+    const currentHeaders = headers[language]
     
     // マニュアルコンテンツをMarkdown形式に変換
     let manualContent = `# ${jsonData.title}\n\n`
     
     if (jsonData.overview) {
-      manualContent += `## 概要\n${jsonData.overview}\n\n`
+      manualContent += `## ${currentHeaders.overview}\n${jsonData.overview}\n\n`
     }
     
-    manualContent += `## 手順\n\n`
+    manualContent += `## ${currentHeaders.steps}\n\n`
     
     if (jsonData.steps && Array.isArray(jsonData.steps)) {
       jsonData.steps.forEach((step: any, index: number) => {

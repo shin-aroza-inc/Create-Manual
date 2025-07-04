@@ -32,6 +32,29 @@
     "generating": "マニュアルを生成中...",
     "completed": "完了しました"
   },
+  "manual": {
+    "title": "操作マニュアル",
+    "language": "言語",
+    "detailLevel": "詳細度",
+    "createdAt": "作成日時",
+    "languages": {
+      "ja": "日本語",
+      "en": "English"
+    },
+    "detailLevels": {
+      "simple": "簡潔",
+      "detailed": "詳細"
+    }
+  },
+  "processing": {
+    "inProgress": "処理中",
+    "errorOccurred": "エラーが発生しました",
+    "completed": "マニュアルの生成が完了しました。",
+    "retry": "再試行",
+    "showDetails": "技術的な詳細を表示",
+    "timestamp": "タイムスタンプ",
+    "errorDetails": "エラー内容"
+  },
   "errors": {
     "fileTooLarge": "ファイルサイズが500MBを超えています",
     "invalidFormat": "サポートされていないファイル形式です",

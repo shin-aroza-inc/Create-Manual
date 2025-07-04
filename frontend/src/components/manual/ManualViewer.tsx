@@ -27,15 +27,15 @@ export const ManualViewer: React.FC<ManualViewerProps> = ({
             <FileText className="w-8 h-8 text-primary" />
             <div>
               <h2 className="text-xl font-semibold text-gray-900">
-                {manual.title}
+                {t('manual.title')}
               </h2>
               <div className="flex items-center space-x-4 text-sm text-gray-500 mt-1">
-                <span>言語: {manual.language === 'ja' ? '日本語' : 'English'}</span>
+                <span>{t('manual.language')}: {t(`manual.languages.${manual.language}`)}</span>
                 <span>
-                  詳細度: {manual.detailLevel === 'simple' ? '簡潔' : '詳細'}
+                  {t('manual.detailLevel')}: {t(`manual.detailLevels.${manual.detailLevel}`)}
                 </span>
                 <span>
-                  作成日時: {manual.createdAt.toLocaleDateString()}
+                  {t('manual.createdAt')}: {manual.createdAt.toLocaleDateString()}
                 </span>
               </div>
             </div>
