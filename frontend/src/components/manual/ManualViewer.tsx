@@ -30,9 +30,9 @@ export const ManualViewer: React.FC<ManualViewerProps> = ({
                 {t('manual.title')}
               </h2>
               <div className="flex items-center space-x-4 text-sm text-gray-500 mt-1">
-                <span>{t('manual.language')}: {t(`manual.languages.${manual.language}`)}</span>
+                <span>{t('manual.language')}: {t(`manual.languages.${manual.language}`, manual.language === 'ja' ? 'Japanese' : 'English')}</span>
                 <span>
-                  {t('manual.detailLevel')}: {t(`manual.detailLevels.${manual.detailLevel}`)}
+                  {t('manual.detailLevel')}: {t(`manual.detailLevels.${manual.detailLevel}`, manual.detailLevel === 'simple' ? 'Simple' : 'Detailed')}
                 </span>
                 <span>
                   {t('manual.createdAt')}: {manual.createdAt.toLocaleDateString()}
