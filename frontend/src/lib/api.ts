@@ -24,13 +24,13 @@ export const uploadVideo = async (file: File): Promise<string> => {
 export const processVideo = async (
   request: VideoProcessRequest
 ): Promise<ApiResponse<VideoProcessResponse>> => {
-  const { data: { session } } = await supabase.auth.getSession()
+  await supabase.auth.getSession()
   
   const response = await fetch(API_ENDPOINTS.PROCESS_VIDEO, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${supabase.supabaseKey}`,
+      'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
     },
     body: JSON.stringify(request),
   })

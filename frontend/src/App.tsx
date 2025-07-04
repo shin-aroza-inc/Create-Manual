@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { VideoUploader } from '@/components/upload/VideoUploader'
@@ -29,10 +29,8 @@ function App() {
 
   // マニュアル生成関連
   const {
-    isProcessing,
     status,
     generatedManual,
-    error: processingError,
     generateManual,
     downloadManual,
     reset: resetProcessing

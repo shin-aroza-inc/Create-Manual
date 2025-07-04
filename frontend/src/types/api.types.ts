@@ -20,4 +20,5 @@ export interface Screenshot {
   url: string
   timestamp: number
   description: string
+  stepNumber: number
 }

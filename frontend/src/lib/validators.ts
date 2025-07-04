@@ -11,7 +11,7 @@ export const validateVideo = (file: File): VideoValidationResult => {
   }
 
   // ファイル形式チェック
-  if (!FILE_LIMITS.SUPPORTED_MIME_TYPES.includes(file.type)) {
+  if (!FILE_LIMITS.SUPPORTED_MIME_TYPES.includes(file.type as any)) {
     errors.push(MESSAGES.ERRORS.INVALID_FORMAT)
   }
 
