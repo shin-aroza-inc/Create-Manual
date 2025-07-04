@@ -1,0 +1,43 @@
+{
+  "title": "Manual Generator",
+  "subtitle": "Automatically create manuals from videos",
+  "upload": {
+    "title": "Upload Video",
+    "dragDrop": "Drag & drop file here",
+    "orClick": "or click to select file",
+    "supportedFormats": "Supported formats: MP4, MOV, AVI, WebM",
+    "maxSize": "Max size: 500MB",
+    "maxDuration": "Max duration: 10 minutes",
+    "processing": "Processing...",
+    "cancel": "Cancel"
+  },
+  "options": {
+    "title": "Options",
+    "language": "Language",
+    "detailLevel": "Detail Level",
+    "detailLevels": {
+      "simple": "Simple",
+      "detailed": "Detailed"
+    }
+  },
+  "buttons": {
+    "generateManual": "Generate Manual",
+    "download": "Download",
+    "newManual": "New Manual"
+  },
+  "status": {
+    "uploading": "Uploading video...",
+    "analyzing": "Analyzing video...",
+    "extracting": "Extracting screenshots...",
+    "generating": "Generating manual...",
+    "completed": "Completed"
+  },
+  "errors": {
+    "fileTooLarge": "File size exceeds 500MB",
+    "invalidFormat": "Unsupported file format",
+    "uploadFailed": "Upload failed",
+    "processingFailed": "Processing failed",
+    "networkError": "Network error occurred",
+    "timeout": "Request timed out"
+  }
+}

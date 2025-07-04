@@ -1,0 +1,42 @@
+# 依存関係
+node_modules/
+.pnpm-store/
+
+# 環境変数
+.env
+.env.local
+.env.*.local
+
+# ビルド成果物
+dist/
+build/
+.next/
+
+# エディタ
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ログ
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# テスト
+coverage/
+.nyc_output/
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+
+# OS
+Thumbs.db
+
+# 一時ファイル
+*.tmp
+*.temp

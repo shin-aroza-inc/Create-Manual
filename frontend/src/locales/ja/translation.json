@@ -1,0 +1,43 @@
+{
+  "title": "マニュアル自動生成",
+  "subtitle": "動画をアップロードして手順書を自動作成します",
+  "upload": {
+    "title": "動画をアップロード",
+    "dragDrop": "ここにファイルをドラッグ&ドロップ",
+    "orClick": "またはクリックしてファイルを選択",
+    "supportedFormats": "対応形式: MP4, MOV, AVI, WebM",
+    "maxSize": "最大サイズ: 500MB",
+    "maxDuration": "最大長さ: 10分",
+    "processing": "処理中...",
+    "cancel": "キャンセル"
+  },
+  "options": {
+    "title": "オプション設定",
+    "language": "言語",
+    "detailLevel": "詳細度",
+    "detailLevels": {
+      "simple": "簡潔",
+      "detailed": "詳細"
+    }
+  },
+  "buttons": {
+    "generateManual": "マニュアル作成",
+    "download": "ダウンロード",
+    "newManual": "新しいマニュアル"
+  },
+  "status": {
+    "uploading": "動画をアップロード中...",
+    "analyzing": "動画を解析中...",
+    "extracting": "スクリーンショットを抽出中...",
+    "generating": "マニュアルを生成中...",
+    "completed": "完了しました"
+  },
+  "errors": {
+    "fileTooLarge": "ファイルサイズが500MBを超えています",
+    "invalidFormat": "サポートされていないファイル形式です",
+    "uploadFailed": "アップロードに失敗しました",
+    "processingFailed": "処理に失敗しました",
+    "networkError": "ネットワークエラーが発生しました",
+    "timeout": "タイムアウトしました"
+  }
+}
