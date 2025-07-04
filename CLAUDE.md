@@ -103,11 +103,12 @@ Create-Manual/
 
 ### 処理フロー
 1. 動画アップロード (最大500MB、10分)
-2. Supabase Storageに一時保存
-3. Gemini APIで動画解析
-4. Cloudinaryで指定タイムスタンプのスクリーンショット抽出
-5. Markdown形式でマニュアル生成
-6. ユーザーがダウンロード可能
+2. プライベート`videos`バケットに保存し、10分間有効な署名付きURL生成
+3. 署名付きURLでGemini APIによる動画解析
+4. 署名付きURLでCloudinaryによるスクリーンショット抽出
+5. 抽出した画像をプライベート`screenshots`バケットに保存
+6. Markdown形式でマニュアル生成（画像は`screenshots`バケットのURL）
+7. ユーザーがダウンロード可能
 
 ## 環境変数
 
@@ -123,9 +124,13 @@ GEMINI_API_KEY=your-gemini-api-key
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-cloudinary-api-key
 CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+SUPABASE_URL=https://xxxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
 **設定方法**: Supabaseダッシュボード → Edge Functions → Settings → Secrets
+
+**重要**: `SUPABASE_SERVICE_ROLE_KEY`はストレージへの管理者アクセスに必要です
 
 ## デバッグとテスト
 
@@ -133,11 +138,14 @@ CLOUDINARY_API_SECRET=your-cloudinary-api-secret
 Supabaseダッシュボード → Edge Functions → process-video → Logs タブで確認
 
 ### よくある問題
-1. **Cloudinary 400エラー**: 公開URLでないとアクセス不可。`public-videos`バケットを使用する
+1. **署名付きURL期限切れ**: 動画の署名付きURLは10分間有効。処理時間を考慮
 2. **Gemini APIエラー**: Resumable uploadプロトコルを使用。ファイルサイズとContent-Lengthヘッダーが必須
-3. **CORS エラー**: `_shared/cors.ts`でCORSヘッダーを適切に設定
+3. **ストレージ権限エラー**: `SUPABASE_SERVICE_ROLE_KEY`が正しく設定されているか確認
+4. **CORS エラー**: `_shared/cors.ts`でCORSヘッダーを適切に設定
 
 ## セキュリティ考慮事項
-- 署名付きURLは1時間で期限切れ
+- 動画の署名付きURLは10分で期限切れ（処理時間を考慮）
+- 画像の署名付きURLは1時間で期限切れ
 - APIキーは環境変数で管理
-- プライベートバケットを基本使用（Cloudinary連携時のみパブリック）
+- 全てプライベートバケットを使用（`videos`, `screenshots`）
+- Service Role Keyによるサーバーサイド専用アクセス

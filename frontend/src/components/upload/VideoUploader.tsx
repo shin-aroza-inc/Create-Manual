@@ -91,12 +91,13 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
       {!selectedVideo ? (
         <div
           className={`
-            relative border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
+            relative rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer
+            bg-white shadow-soft hover:shadow-lg
             ${isDragOver 
-              ? 'border-primary bg-primary/5' 
-              : 'border-gray-300 hover:border-primary'
+              ? 'border-2 border-primary-400 bg-gradient-to-br from-primary-50 to-primary-100/50 scale-[1.02]' 
+              : 'border-2 border-dashed border-gray-300 hover:border-primary-300'
             }
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.01]'}
           `}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -112,35 +113,54 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
             disabled={disabled}
           />
           
-          <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <div className={`inline-flex p-4 rounded-full mb-6 transition-all duration-300 ${
+            isDragOver ? 'bg-primary-100 shadow-inner-glow' : 'bg-gray-100'
+          }`}>
+            <Upload className={`w-8 h-8 transition-all duration-300 ${
+              isDragOver ? 'text-primary-600 animate-bounce-gentle' : 'text-gray-500'
+            }`} />
+          </div>
           
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-3">
             {t('upload.title')}
           </h3>
           
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-6 leading-relaxed">
             {t('upload.dragDrop')}
             <br />
-            {t('upload.orClick')}
+            <span className="text-primary-600 font-medium">{t('upload.orClick')}</span>
           </p>
           
-          <div className="text-sm text-gray-500 space-y-1">
-            <p>{t('upload.supportedFormats')}</p>
-            <p>{t('upload.maxSize')}</p>
-            <p>{t('upload.maxDuration')}</p>
+          <div className="inline-flex flex-col items-start bg-gray-50 rounded-lg px-6 py-4 text-sm text-gray-600 space-y-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 bg-primary-400 rounded-full"></div>
+              <p>{t('upload.supportedFormats')}</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 bg-primary-400 rounded-full"></div>
+              <p>{t('upload.maxSize')}</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 bg-primary-400 rounded-full"></div>
+              <p>{t('upload.maxDuration')}</p>
+            </div>
           </div>
         </div>
       ) : (
-        <div className="border rounded-lg p-4 bg-gray-50">
+        <div className="bg-white rounded-xl shadow-soft p-6 border border-gray-200/50 animate-scale-up">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Film className="w-8 h-8 text-primary" />
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg shadow-inner">
+                <Film className="w-8 h-8 text-primary-700" />
+              </div>
               <div>
-                <p className="font-medium text-gray-900">
+                <p className="font-semibold text-gray-900 text-lg">
                   {selectedVideo.file.name}
                 </p>
-                <p className="text-sm text-gray-500">
-                  {formatFileSize(selectedVideo.size)}
+                <p className="text-sm text-gray-600 mt-1">
+                  <span className="font-medium">{formatFileSize(selectedVideo.size)}</span>
+                  <span className="mx-2 text-gray-400">•</span>
+                  <span className="text-primary-600 font-medium">準備完了</span>
                 </p>
               </div>
             </div>
@@ -149,6 +169,7 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
               size="sm"
               onClick={handleRemoveFile}
               disabled={disabled}
+              className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors duration-200"
             >
               <X className="w-4 h-4" />
             </Button>

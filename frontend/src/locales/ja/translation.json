@@ -2,6 +2,8 @@
   "title": "マニュアル自動生成",
   "subtitle": "動画をアップロードして手順書を自動作成します",
   "upload": {
+    "mainTitle": "動画から手順書を自動生成",
+    "mainDescription": "動画をアップロードして、AI が自動的にステップバイステップのマニュアルを作成します",
     "title": "動画をアップロード",
     "dragDrop": "ここにファイルをドラッグ&ドロップ",
     "orClick": "またはクリックしてファイルを選択",
@@ -30,7 +32,13 @@
     "analyzing": "動画を解析中...",
     "extracting": "スクリーンショットを抽出中...",
     "generating": "マニュアルを生成中...",
-    "completed": "完了しました"
+    "completed": "完了しました",
+    "stages": {
+      "uploading": "アップロード",
+      "analyzing": "解析",
+      "extracting": "抽出",
+      "generating": "生成"
+    }
   },
   "manual": {
     "title": "操作マニュアル",
@@ -48,6 +56,7 @@
   },
   "processing": {
     "inProgress": "処理中",
+    "waitMessage": "少々お待ちください...",
     "errorOccurred": "エラーが発生しました",
     "completed": "マニュアルの生成が完了しました。",
     "retry": "再試行",

@@ -24,19 +24,26 @@ export const OptionsSelector: React.FC<OptionsSelectorProps> = ({
   }
 
   return (
-    <div className="bg-white border rounded-lg p-6">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">
+    <div className="bg-white rounded-xl shadow-soft p-8 border border-gray-200/50">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">
         {t('options.title')}
       </h3>
       
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* 言語選択 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-gray-700 mb-4">
             {t('options.language')}
           </label>
-          <div className="flex space-x-4">
-            <label className="flex items-center">
+          <div className="grid grid-cols-2 gap-4">
+            <label className={`
+              relative flex items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
+              ${options.language === 'ja' 
+                ? 'border-primary-500 bg-primary-50 shadow-md' 
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }
+              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            `}>
               <input
                 type="radio"
                 name="language"
@@ -44,11 +51,23 @@ export const OptionsSelector: React.FC<OptionsSelectorProps> = ({
                 checked={options.language === 'ja'}
                 onChange={() => handleLanguageChange('ja')}
                 disabled={disabled}
-                className="text-primary focus:ring-primary"
+                className="sr-only"
               />
-              <span className="ml-2 text-sm text-gray-700">日本語</span>
+              <span className={`font-medium ${options.language === 'ja' ? 'text-primary-700' : 'text-gray-700'}`}>
+                🇯🇵 日本語
+              </span>
+              {options.language === 'ja' && (
+                <div className="absolute top-2 right-2 w-3 h-3 bg-primary-500 rounded-full animate-scale-up"></div>
+              )}
             </label>
-            <label className="flex items-center">
+            <label className={`
+              relative flex items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
+              ${options.language === 'en' 
+                ? 'border-primary-500 bg-primary-50 shadow-md' 
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }
+              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            `}>
               <input
                 type="radio"
                 name="language"
@@ -56,20 +75,32 @@ export const OptionsSelector: React.FC<OptionsSelectorProps> = ({
                 checked={options.language === 'en'}
                 onChange={() => handleLanguageChange('en')}
                 disabled={disabled}
-                className="text-primary focus:ring-primary"
+                className="sr-only"
               />
-              <span className="ml-2 text-sm text-gray-700">English</span>
+              <span className={`font-medium ${options.language === 'en' ? 'text-primary-700' : 'text-gray-700'}`}>
+                🇺🇸 English
+              </span>
+              {options.language === 'en' && (
+                <div className="absolute top-2 right-2 w-3 h-3 bg-primary-500 rounded-full animate-scale-up"></div>
+              )}
             </label>
           </div>
         </div>
 
         {/* 詳細度選択 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-gray-700 mb-4">
             {t('options.detailLevel')}
           </label>
-          <div className="flex space-x-4">
-            <label className="flex items-center">
+          <div className="grid grid-cols-2 gap-4">
+            <label className={`
+              relative flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
+              ${options.detailLevel === 'simple' 
+                ? 'border-primary-500 bg-primary-50 shadow-md' 
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }
+              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            `}>
               <input
                 type="radio"
                 name="detailLevel"
@@ -77,13 +108,24 @@ export const OptionsSelector: React.FC<OptionsSelectorProps> = ({
                 checked={options.detailLevel === 'simple'}
                 onChange={() => handleDetailLevelChange('simple')}
                 disabled={disabled}
-                className="text-primary focus:ring-primary"
+                className="sr-only"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className={`text-2xl mb-2 ${options.detailLevel === 'simple' ? 'animate-bounce-gentle' : ''}`}>📄</span>
+              <span className={`font-medium ${options.detailLevel === 'simple' ? 'text-primary-700' : 'text-gray-700'}`}>
                 {t('options.detailLevels.simple')}
               </span>
+              {options.detailLevel === 'simple' && (
+                <div className="absolute top-2 right-2 w-3 h-3 bg-primary-500 rounded-full animate-scale-up"></div>
+              )}
             </label>
-            <label className="flex items-center">
+            <label className={`
+              relative flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
+              ${options.detailLevel === 'detailed' 
+                ? 'border-primary-500 bg-primary-50 shadow-md' 
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }
+              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            `}>
               <input
                 type="radio"
                 name="detailLevel"
@@ -91,11 +133,15 @@ export const OptionsSelector: React.FC<OptionsSelectorProps> = ({
                 checked={options.detailLevel === 'detailed'}
                 onChange={() => handleDetailLevelChange('detailed')}
                 disabled={disabled}
-                className="text-primary focus:ring-primary"
+                className="sr-only"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className={`text-2xl mb-2 ${options.detailLevel === 'detailed' ? 'animate-bounce-gentle' : ''}`}>📚</span>
+              <span className={`font-medium ${options.detailLevel === 'detailed' ? 'text-primary-700' : 'text-gray-700'}`}>
                 {t('options.detailLevels.detailed')}
               </span>
+              {options.detailLevel === 'detailed' && (
+                <div className="absolute top-2 right-2 w-3 h-3 bg-primary-500 rounded-full animate-scale-up"></div>
+              )}
             </label>
           </div>
         </div>

@@ -80,18 +80,21 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-50/20">
       {/* ヘッダー */}
-      <header className="bg-white border-b">
+      <header className="glass border-b border-gray-200/50 sticky top-0 z-50 animate-slide-down">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <img src="/logo.svg" alt="Manual Generator" className="h-12 w-auto" />
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary-400 blur-xl opacity-30 animate-pulse-soft"></div>
+                <img src="/logo.svg" alt="Manual Generator" className="h-14 w-auto relative z-10 drop-shadow-lg" />
+              </div>
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">
+                <h1 className="text-2xl font-bold gradient-text">
                   {t('title')}
                 </h1>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-600 font-medium">
                   {t('subtitle')}
                 </p>
               </div>
@@ -103,37 +106,47 @@ function App() {
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {currentStep === 'upload' && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
+            {/* タイトルセクション */}
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">{t('upload.mainTitle')}</h2>
+              <p className="text-gray-600">{t('upload.mainDescription')}</p>
+            </div>
+
             {/* 動画アップロード */}
-            <VideoUploader
-              onFileSelect={handleFileSelect}
-              selectedVideo={videoFile}
-              error={uploadError}
-              onClearError={clearUploadError}
-              onRemoveFile={removeFile}
-              disabled={isUploading}
-            />
+            <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <VideoUploader
+                onFileSelect={handleFileSelect}
+                selectedVideo={videoFile}
+                error={uploadError}
+                onClearError={clearUploadError}
+                onRemoveFile={removeFile}
+                disabled={isUploading}
+              />
+            </div>
 
             {/* オプション選択 */}
             {videoFile && (
-              <OptionsSelector
-                options={options}
-                onChange={setOptions}
-                disabled={isUploading}
-              />
+              <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                <OptionsSelector
+                  options={options}
+                  onChange={setOptions}
+                  disabled={isUploading}
+                />
+              </div>
             )}
 
             {/* 生成ボタン */}
             {videoFile && (
-              <div className="flex justify-center">
+              <div className="flex justify-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
                 <Button
                   onClick={handleGenerateManual}
                   loading={isUploading}
                   disabled={isUploading}
                   size="lg"
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto shadow-soft hover:shadow-glow transition-shadow duration-300"
                 >
                   {t('buttons.generateManual')}
                 </Button>
@@ -143,23 +156,25 @@ function App() {
         )}
 
         {currentStep === 'processing' && (
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-2xl mx-auto animate-fade-in">
             <ProcessingStatus 
               status={status} 
               onRetry={handleGenerateManual}
             />
             
             {status.stage === 'error' && (
-              <div className="mt-6 flex justify-center space-x-4">
+              <div className="mt-8 flex justify-center space-x-4 animate-slide-up">
                 <Button
                   onClick={handleGenerateManual}
                   variant="primary"
+                  className="shadow-soft hover:shadow-glow transition-shadow duration-300"
                 >
                   再試行
                 </Button>
                 <Button
                   onClick={handleNewManual}
                   variant="secondary"
+                  className="shadow-soft hover:shadow-md transition-shadow duration-300"
                 >
                   最初からやり直す
                 </Button>
@@ -169,20 +184,24 @@ function App() {
         )}
 
         {currentStep === 'result' && generatedManual && (
-          <ManualViewer
-            manual={generatedManual}
-            onDownload={downloadManual}
-            onNewManual={handleNewManual}
-          />
+          <div className="animate-fade-in">
+            <ManualViewer
+              manual={generatedManual}
+              onDownload={downloadManual}
+              onNewManual={handleNewManual}
+            />
+          </div>
         )}
       </main>
 
       {/* フッター */}
-      <footer className="bg-white border-t mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <p className="text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} Manual Generator. All rights reserved.
-          </p>
+      <footer className="glass border-t border-gray-200/50 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="text-center">
+            <p className="text-sm text-gray-600 font-medium">
+              © {new Date().getFullYear()} Manual Generator. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </div>

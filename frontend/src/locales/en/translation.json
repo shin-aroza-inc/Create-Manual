@@ -2,6 +2,8 @@
   "title": "Manual Generator",
   "subtitle": "Automatically create manuals from videos",
   "upload": {
+    "mainTitle": "Generate Manual from Video",
+    "mainDescription": "Upload your video and AI will automatically create a step-by-step manual with screenshots",
     "title": "Upload Video",
     "dragDrop": "Drag & drop file here",
     "orClick": "or click to select file",
@@ -30,7 +32,13 @@
     "analyzing": "Analyzing video...",
     "extracting": "Extracting screenshots...",
     "generating": "Generating manual...",
-    "completed": "Completed"
+    "completed": "Completed",
+    "stages": {
+      "uploading": "Upload",
+      "analyzing": "Analyze",
+      "extracting": "Extract",
+      "generating": "Generate"
+    }
   },
   "manual": {
     "title": "Operation Manual",
@@ -48,6 +56,7 @@
   },
   "processing": {
     "inProgress": "Processing",
+    "waitMessage": "Please wait...",
     "errorOccurred": "An error occurred",
     "completed": "Manual generation completed.",
     "retry": "Retry",

@@ -5,20 +5,25 @@ import type { ApiResponse, VideoProcessRequest, VideoProcessResponse } from '@/t
 export const uploadVideo = async (file: File): Promise<string> => {
   const fileName = `${Date.now()}_${file.name}`
   
+  // プライベートバケットにアップロード
   const { data, error } = await supabase.storage
-    .from('public-videos')
+    .from('videos')
     .upload(fileName, file)
 
   if (error) {
     throw new Error(`動画アップロードに失敗しました: ${error.message}`)
   }
 
-  // 公開バケットから公開URLを取得
-  const { data: publicUrl } = await supabase.storage
-    .from('public-videos')
-    .getPublicUrl(data.path)
+  // プライベートバケットから署名付きURL（10分間有効）を生成
+  const { data: signedUrl, error: signedUrlError } = await supabase.storage
+    .from('videos')
+    .createSignedUrl(data.path, 600) // 600秒 = 10分
 
-  return publicUrl.publicUrl
+  if (signedUrlError) {
+    throw new Error(`署名付きURL生成に失敗しました: ${signedUrlError.message}`)
+  }
+
+  return signedUrl.signedUrl
 }
 
 export const processVideo = async (

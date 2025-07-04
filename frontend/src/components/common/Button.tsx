@@ -21,21 +21,21 @@ export const Button: React.FC<ButtonProps> = ({
   type = 'button',
   className = ''
 }) => {
-  const baseClasses = 'font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+  const baseClasses = 'font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 button-press relative overflow-hidden'
   
   const variantClasses = {
-    primary: 'bg-primary text-white hover:bg-primary-dark focus:ring-primary',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500'
+    primary: 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 focus:ring-primary-500 shadow-lg hover:shadow-xl',
+    secondary: 'bg-white text-gray-700 hover:bg-gray-50 focus:ring-gray-400 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md',
+    danger: 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 focus:ring-red-500 shadow-lg hover:shadow-xl'
   }
   
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg'
+    sm: 'px-4 py-2 text-sm',
+    md: 'px-6 py-2.5 text-base',
+    lg: 'px-8 py-3.5 text-lg'
   }
   
-  const disabledClasses = 'opacity-50 cursor-not-allowed'
+  const disabledClasses = 'opacity-50 cursor-not-allowed hover:shadow-lg'
   
   const classes = `
     ${baseClasses}
@@ -52,14 +52,23 @@ export const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled || loading}
     >
-      {loading ? (
-        <div className="flex items-center">
-          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-          {children}
+      {/* Shimmer effect for primary and danger buttons */}
+      {(variant === 'primary' || variant === 'danger') && !disabled && !loading && (
+        <div className="absolute inset-0 -top-[2px] -bottom-[2px] opacity-0 hover:opacity-100 transition-opacity duration-300">
+          <div className="h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer" />
         </div>
-      ) : (
-        children
       )}
+      
+      <span className="relative z-10 flex items-center justify-center">
+        {loading ? (
+          <>
+            <div className={`w-4 h-4 border-2 ${variant === 'secondary' ? 'border-gray-600' : 'border-white'} border-t-transparent rounded-full animate-spin mr-2`} />
+            {children}
+          </>
+        ) : (
+          children
+        )}
+      </span>
     </button>
   )
 }

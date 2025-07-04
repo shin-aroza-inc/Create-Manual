@@ -36,11 +36,22 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             <li className="text-gray-700">{children}</li>
           ),
           img: ({ src, alt }) => (
-            <img
-              src={src}
-              alt={alt}
-              className="max-w-full h-auto rounded-lg shadow-sm border my-4"
-            />
+            <div className="my-6 text-center">
+              <img
+                src={src}
+                alt={alt}
+                className="max-w-full h-auto rounded-xl shadow-soft border border-gray-200/50 mx-auto animate-fade-in"
+                loading="lazy"
+                onError={(e) => {
+                  // 画像読み込みエラー時のフォールバック
+                  const target = e.target as HTMLImageElement;
+                  target.src = `https://picsum.photos/800/600?random=${Math.random()}`;
+                }}
+              />
+              {alt && (
+                <p className="text-sm text-gray-500 mt-2 italic">{alt}</p>
+              )}
+            </div>
           ),
           blockquote: ({ children }) => (
             <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600 my-4">
