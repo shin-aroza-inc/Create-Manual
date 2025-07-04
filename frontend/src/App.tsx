@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FileVideo } from 'lucide-react'
 
 import { VideoUploader } from '@/components/upload/VideoUploader'
 import { OptionsSelector } from '@/components/upload/OptionsSelector'
@@ -89,7 +88,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <FileVideo className="w-8 h-8 text-primary" />
+              <img src="/logo.svg" alt="Manual Generator" className="h-12 w-auto" />
               <div>
                 <h1 className="text-xl font-semibold text-gray-900">
                   {t('title')}
