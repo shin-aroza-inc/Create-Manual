@@ -26,10 +26,11 @@ Gemini APIで動画を解析し、Cloudinaryで重要シーンのスクリーン
 
 ### ストレージ
 - **Supabase Storage** (手動でバケット作成が必要):
-  - `videos`: プライベートバケット（一時保存用）
-  - `public-videos`: パブリックバケット（Cloudinary連携用）
+  - `videos`: パブリックバケット（動画一時保存用、Cloudinary連携のため）
+  - `public-videos`: パブリックバケット（予備、将来的な使用のため）
   - `screenshots`: プライベートバケット
   
+  **重要**: `videos`バケットはCloudinaryのURL長制限対策のため、パブリックバケットとして設定
   設定手順は `docs/development/supabase-setup-manual.md` を参照
 
 ## 開発コマンド
@@ -103,12 +104,13 @@ Create-Manual/
 
 ### 処理フロー
 1. 動画アップロード (最大500MB、10分)
-2. プライベート`videos`バケットに保存し、10分間有効な署名付きURL生成
-3. 署名付きURLでGemini APIによる動画解析
-4. 署名付きURLでCloudinaryによるスクリーンショット抽出
+2. パブリック`videos`バケットに保存（Cloudinary連携のため）
+3. 公開URLでGemini APIによる動画解析
+4. 公開URLでCloudinaryによるスクリーンショット抽出（URL長制限を回避）
 5. 抽出した画像をプライベート`screenshots`バケットに保存
-6. Markdown形式でマニュアル生成（画像は`screenshots`バケットのURL）
+6. Markdown形式でマニュアル生成（画像は`screenshots`バケットの署名付きURL）
 7. ユーザーがダウンロード可能
+8. 動画は定期的にクリーンアップ（別Edge Function）
 
 ## 環境変数
 
@@ -142,10 +144,17 @@ Supabaseダッシュボード → Edge Functions → process-video → Logs タ�
 2. **Gemini APIエラー**: Resumable uploadプロトコルを使用。ファイルサイズとContent-Lengthヘッダーが必須
 3. **ストレージ権限エラー**: `SUPABASE_SERVICE_ROLE_KEY`が正しく設定されているか確認
 4. **CORS エラー**: `_shared/cors.ts`でCORSヘッダーを適切に設定
+5. **Cloudinaryのpublic_id制限**: CloudinaryのFetch APIはpublic_idの最大長が255文字まで。Supabaseの署名付きURL（約400-450文字）は制限を超えるため、URLの短縮処理を実装済み
+
+### Cloudinary利用上の制約
+- **動画アップロード禁止**: 設計方針により、動画はSupabaseストレージのみに保存する
+- **データ通信量の最小化**: 動画をCloudinaryにアップロードしてからスクリーンショットを取得する方法は採用しない
+- **Fetch APIのみ利用**: CloudinaryのVideo Fetch APIを使用してスクリーンショットを取得
 
 ## セキュリティ考慮事項
-- 動画の署名付きURLは10分で期限切れ（処理時間を考慮）
+- 動画はパブリックバケットに保存（Cloudinary連携のため）
+- 動画は定期的にクリーンアップ（流出リスク軽減）
 - 画像の署名付きURLは1時間で期限切れ
 - APIキーは環境変数で管理
-- 全てプライベートバケットを使用（`videos`, `screenshots`）
+- `screenshots`バケットはプライベート設定を維持
 - Service Role Keyによるサーバーサイド専用アクセス

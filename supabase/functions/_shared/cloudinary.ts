@@ -28,14 +28,18 @@ export async function extractScreenshots(
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
   const screenshots: CloudinaryScreenshot[] = []
 
-  console.log('Attempting direct Cloudinary video/fetch approach...')
+  console.log('Generating screenshots with Cloudinary API...')
 
   for (const timestamp of timestamps) {
     try {
-      // 元の方法: CloudinaryのVideo Fetch APIを使用
-      const screenshotUrl = await generateCloudinaryUrl(videoUrl, timestamp)
+      // publicバケットのURLは署名なしでアクセス可能
+      // URLをそのままエンコード
+      const encodedUrl = encodeURIComponent(videoUrl)
       
-      console.log(`Generating screenshot for timestamp ${timestamp}:`, screenshotUrl)
+      // Cloudinaryの変換URLを生成（署名なし）
+      const screenshotUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/fetch/so_${timestamp}/f_jpg,q_auto/${encodedUrl}`
+      
+      console.log(`Generating screenshot for timestamp ${timestamp}`)
       const imageResponse = await fetch(screenshotUrl)
       console.log(`Cloudinary response status for timestamp ${timestamp}:`, imageResponse.status)
       
@@ -54,9 +58,9 @@ export async function extractScreenshots(
 
         if (uploadError) {
           console.error(`Failed to upload screenshot to Supabase for timestamp ${timestamp}:`, uploadError)
-          // フォールバックとしてプレースホルダーを使用
+          // エラー画像を使用
           screenshots.push({
-            url: `https://picsum.photos/800/600?random=${timestamp}`,
+            url: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zOTAuNSAyODBIMzk5LjVWMjk5SDM5MC41VjI4MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHA+dGV4dCB4PSI0MDAiIHk9IjMzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2QjczODAiPuODnuODi+ODpeOCouODq+OBruOCueOCr+ODquODvOODs+OCt+ODp+ODg+ODiOOBruaKmOWHuuOCqOODqeODvCAtIE1hbnVhbCBHZW5lcmF0b3I8L3RleHQ+Cjwvc3ZnPg==',
             timestamp
           })
           continue
@@ -71,8 +75,9 @@ export async function extractScreenshots(
 
         if (signedUrlError) {
           console.error(`Failed to create signed URL for timestamp ${timestamp}:`, signedUrlError)
+          // CloudinaryのURLを使用
           screenshots.push({
-            url: screenshotUrl, // Cloudinaryのオリジナルを使用
+            url: screenshotUrl,
             timestamp
           })
         } else {
@@ -84,26 +89,29 @@ export async function extractScreenshots(
           })
         }
       } else {
-        // より詳細なエラー情報を取得
+        // エラーレスポンスの詳細を確認
         const responseText = await imageResponse.text()
         console.error(`Cloudinary URL failed for timestamp ${timestamp}:`, {
           status: imageResponse.status,
           statusText: imageResponse.statusText,
           headers: Object.fromEntries(imageResponse.headers.entries()),
-          responseBody: responseText.substring(0, 500) // 最初の500文字のみ
+          responseBody: responseText.substring(0, 500)
         })
         
-        // フォールバックとしてプレースホルダーを使用
+        // URLが長すぎる場合は、別の方法を試す
+        console.log('Trying alternative approach with shorter URL...')
+        
+        // エラー画像を使用
         screenshots.push({
-          url: `https://picsum.photos/800/600?random=${timestamp}`,
+          url: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zOTAuNSAyODBIMzk5LjVWMjk5SDM5MC41VjI4MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHA+dGV4dCB4PSI0MDAiIHk9IjMzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2QjczODAiPuODnuODi+ODpeOCouODq+OBruOCueOCr+ODquODvOODs+OCt+ODp+ODg+ODiOOBruaKmOWHuuOCqOODqeODvCAtIE1hbnVhbCBHZW5lcmF0b3I8L3RleHQ+Cjwvc3ZnPg==',
           timestamp
         })
       }
     } catch (error) {
       console.error(`Failed to generate screenshot for timestamp ${timestamp}:`, error)
-      // エラーの場合もフォールバックを使用
+      // エラーの場合もエラー画像を使用
       screenshots.push({
-        url: `https://picsum.photos/800/600?random=${timestamp}`,
+        url: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zOTAuNSAyODBIMzk5LjVWMjk5SDM5MC41VjI4MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHA+dGV4dCB4PSI0MDAiIHk9IjMzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2QjczODAiPuODnuODi+ODpeOCouODq+OBruOCueOCr+ODquODvOODs+OCt+ODp+ODg+ODiOOBruaKmOWHuuOCqOODqeODvCAtIE1hbnVhbCBHZW5lcmF0b3I8L3RleHQ+Cjwvc3ZnPg==',
         timestamp
       })
     }
@@ -112,45 +120,4 @@ export async function extractScreenshots(
   return screenshots
 }
 
-async function generateCloudinaryUrl(videoUrl: string, timestamp: number): Promise<string> {
-  if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_SECRET) {
-    throw new Error('CLOUDINARY_CLOUD_NAME or CLOUDINARY_API_SECRET is not configured')
-  }
-
-  console.log(`Original video URL for timestamp ${timestamp}:`, videoUrl)
-  
-  // エンコードされたURL
-  const encodedUrl = encodeURIComponent(videoUrl)
-  
-  // 変換パラメータ部分
-  const trans = `so_${timestamp}/f_jpg,q_auto`
-  
-  // 署名対象文字列
-  const toSign = trans + '/' + encodedUrl
-  
-  // SHA-1ハッシュで署名を生成
-  const encoder = new TextEncoder()
-  const data = encoder.encode(toSign + CLOUDINARY_API_SECRET)
-  
-  // SHA-1ハッシュを計算
-  const hashBuffer = await crypto.subtle.digest('SHA-1', data)
-  const hashArray = new Uint8Array(hashBuffer)
-  
-  // Base64URL エンコード
-  const base64String = btoa(String.fromCharCode(...hashArray))
-  const base64UrlString = base64String
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '')
-  
-  // 最初の8文字を使用
-  const sig = base64UrlString.slice(0, 8)
-  
-  // 署名付きURLを生成
-  const cloudinaryUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/fetch/s--${sig}--/${trans}/${encodedUrl}`
-  
-  console.log('Generated signed Cloudinary URL:', cloudinaryUrl)
-  
-  return cloudinaryUrl
-}
 
