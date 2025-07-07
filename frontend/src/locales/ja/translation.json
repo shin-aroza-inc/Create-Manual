@@ -25,6 +25,7 @@
   "buttons": {
     "generateManual": "マニュアル作成",
     "download": "ダウンロード",
+    "viewPdf": "PDF表示",
     "newManual": "新しいマニュアル"
   },
   "status": {

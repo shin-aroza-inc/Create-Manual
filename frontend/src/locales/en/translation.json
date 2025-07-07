@@ -25,6 +25,7 @@
   "buttons": {
     "generateManual": "Generate Manual",
     "download": "Download",
+    "viewPdf": "View PDF",
     "newManual": "New Manual"
   },
   "status": {

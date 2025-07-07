@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Download, FileText } from 'lucide-react'
+import { Download, FileText, FileOutput } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { MarkdownRenderer } from './MarkdownRenderer'
 import type { Manual } from '@/types/manual.types'
@@ -8,12 +8,14 @@ import type { Manual } from '@/types/manual.types'
 interface ManualViewerProps {
   manual: Manual
   onDownload: () => void
+  onViewPdf: () => void
   onNewManual: () => void
 }
 
 export const ManualViewer: React.FC<ManualViewerProps> = ({
   manual,
   onDownload,
+  onViewPdf,
   onNewManual
 }) => {
   const { t } = useTranslation()
@@ -59,6 +61,14 @@ export const ManualViewer: React.FC<ManualViewerProps> = ({
             >
               <Download className="w-4 h-4" />
               <span>{t('buttons.download')}</span>
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={onViewPdf}
+              className="flex items-center space-x-2 shadow-soft hover:shadow-md"
+            >
+              <FileOutput className="w-4 h-4" />
+              <span>{t('buttons.viewPdf')}</span>
             </Button>
             <Button
               onClick={onNewManual}

@@ -10,6 +10,7 @@ import { Button } from '@/components/common/Button'
 
 import { useVideoUpload } from '@/hooks/useVideoUpload'
 import { useManualGeneration } from '@/hooks/useManualGeneration'
+import { usePdfGenerator } from '@/hooks/usePdfGenerator'
 
 import type { ManualGenerationOptions } from '@/types/manual.types'
 
@@ -35,6 +36,9 @@ function App() {
     downloadManual,
     reset: resetProcessing
   } = useManualGeneration()
+
+  // PDF生成関連
+  const { generatePdf } = usePdfGenerator()
 
   // オプション設定
   const [options, setOptions] = useState<ManualGenerationOptions>({
@@ -73,6 +77,16 @@ function App() {
     resetUpload()
     resetProcessing()
     setCurrentStep('upload')
+  }
+
+  const handleViewPdf = async () => {
+    if (!generatedManual) return
+
+    try {
+      await generatePdf(generatedManual)
+    } catch (error) {
+      console.error('PDF表示エラー:', error)
+    }
   }
 
   const clearUploadError = () => {
@@ -188,6 +202,7 @@ function App() {
             <ManualViewer
               manual={generatedManual}
               onDownload={downloadManual}
+              onViewPdf={handleViewPdf}
               onNewManual={handleNewManual}
             />
           </div>
