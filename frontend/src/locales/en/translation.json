@@ -28,6 +28,10 @@
     "viewPdf": "View PDF",
     "newManual": "New Manual"
   },
+  "terms": {
+    "agreement": "I agree to the Terms of Service",
+    "content": "By using this service, you agree to the following:\n• Uploaded videos will be automatically deleted after 15 minutes\n• Generated images (screenshots) will be automatically deleted after 15 minutes\n• We are not responsible for the content of generated manuals\n• This service may be changed or discontinued without notice"
+  },
   "status": {
     "uploading": "Uploading video...",
     "analyzing": "Analyzing video...",

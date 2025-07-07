@@ -48,9 +48,10 @@ function App() {
 
   // アプリケーションの状態
   const [currentStep, setCurrentStep] = useState<'upload' | 'processing' | 'result'>('upload')
+  const [termsAgreed, setTermsAgreed] = useState(false)
 
   const handleGenerateManual = async () => {
-    if (!videoFile) return
+    if (!videoFile || !termsAgreed) return
 
     setCurrentStep('processing')
     
@@ -77,6 +78,7 @@ function App() {
     resetUpload()
     resetProcessing()
     setCurrentStep('upload')
+    setTermsAgreed(false)
   }
 
   const handleViewPdf = async () => {
@@ -152,13 +154,37 @@ function App() {
               </div>
             )}
 
+            {/* 利用規約同意 */}
+            {videoFile && (
+              <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                <div className="bg-white rounded-xl shadow-soft p-6 border border-gray-200/50">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">利用規約</h3>
+                    <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 max-h-32 overflow-y-auto">
+                      <p className="whitespace-pre-line">{t('terms.content')}</p>
+                    </div>
+                    <label className="flex items-start space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={termsAgreed}
+                        onChange={(e) => setTermsAgreed(e.target.checked)}
+                        className="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2"
+                        disabled={isUploading}
+                      />
+                      <span className="text-sm text-gray-700">{t('terms.agreement')}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* 生成ボタン */}
             {videoFile && (
-              <div className="flex justify-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
+              <div className="flex justify-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
                 <Button
                   onClick={handleGenerateManual}
                   loading={isUploading}
-                  disabled={isUploading}
+                  disabled={isUploading || !termsAgreed}
                   size="lg"
                   className="w-full sm:w-auto shadow-soft hover:shadow-glow transition-shadow duration-300"
                 >
