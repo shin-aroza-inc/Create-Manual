@@ -17,9 +17,9 @@
 ### 技術スタック
 - **フロントエンド**: React + TypeScript + Vite + Tailwind CSS
 - **バックエンド**: Supabase Edge Functions (Deno)
-- **AI**: Gemini 2.0 Flash API
+- **AI**: Gemini 2.5 Flash API
 - **画像処理**: Cloudinary API
-- **ストレージ**: Supabase Storage (Private)
+- **ストレージ**: Supabase Storage
 - **デプロイ**: Netlify (Frontend) + Supabase (Backend)
 
 ### システム構成
@@ -45,7 +45,7 @@ Supabase Edge Functions
 
 1. **リポジトリクローン**
 ```bash
-git clone <repository-url>
+git clone https://github.com/your-username/Create-Manual.git
 cd Create-Manual
 ```
 
@@ -60,7 +60,8 @@ npm run dev
 
 3. **Supabase設定**
 ```bash
-# docs/development/supabase-setup-manual.md を参照
+# supabase-setup.md を参照
+# 必要なバケットの作成、環境変数の設定等
 ```
 
 ## 📁 プロジェクト構成
@@ -84,16 +85,14 @@ Create-Manual/
         └── process-video/ # メイン処理
 ```
 
-## 🔧 セットアップ詳細
+## 🔧 詳細設定
 
-### 1. 開発環境構築
-詳細は [docs/development/development-setup.md](docs/development/development-setup.md) を参照
-
-### 2. Supabase設定
-詳細は [docs/development/supabase-setup-manual.md](docs/development/supabase-setup-manual.md) を参照
-
-### 3. コーディング規約
-詳細は [docs/development/coding-standards.md](docs/development/coding-standards.md) を参照
+### Supabase設定
+完全な設定手順は [`supabase-setup.md`](supabase-setup.md) を参照してください。
+- ストレージバケットの作成
+- Row Level Securityの設定  
+- 自動クリーンアップ機能の設定
+- 環境変数の設定
 
 ## 🎯 使用方法
 
@@ -135,15 +134,17 @@ supabase functions deploy process-video # デプロイ
 - **対応形式**: MP4, MOV, AVI, WebM
 - **同時処理**: 1ユーザー1処理まで
 - **ファイル保存期間**: 
-  - 動画: 処理完了後即削除
-  - 画像: 1時間後自動削除
+  - 動画: 15分後に自動削除
+  - 画像: 15分後に自動削除
 
 ## 🔐 セキュリティ
 
-- Supabase Storage: Private バケット使用
+- Supabase Storage: プライベートバケット使用（画像）
 - 署名付きURL: 1時間の有効期限
 - API キー: 環境変数で管理
 - CORS: 適切なヘッダー設定
+- 動画ファイル: 15分後に自動削除
+- 画像ファイル: 15分後に自動削除
 
 ## 🚢 デプロイ
 
@@ -166,7 +167,7 @@ supabase functions deploy process-video
 
 - [ ] ユーザー認証機能
 - [ ] 履歴管理機能  
-- [ ] PDFエクスポート機能
+- [x] PDFエクスポート機能
 - [ ] マニュアルテンプレート機能
 - [ ] 共同編集機能
 - [ ] より多くの言語対応
@@ -185,5 +186,5 @@ MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照
 ## 📞 サポート
 
 - 📖 [ドキュメント](docs/)
-- 🐛 [Issue報告](https://github.com/your-org/Create-Manual/issues)
-- 💬 [ディスカッション](https://github.com/your-org/Create-Manual/discussions)
+- 🐛 [Issue報告](https://github.com/your-username/Create-Manual/issues)
+- 💬 [ディスカッション](https://github.com/your-username/Create-Manual/discussions)

@@ -2,10 +2,12 @@
 node_modules/
 .pnpm-store/
 
-# 環境変数
+# 環境変数（機密情報）
 .env
 .env.local
 .env.*.local
+.env.production
+.env.development
 
 # ビルド成果物
 dist/
@@ -33,6 +35,7 @@ coverage/
 # Supabase
 supabase/.temp/
 supabase/.branches/
+.supabase/
 
 # OS
 Thumbs.db
@@ -40,3 +43,10 @@ Thumbs.db
 # 一時ファイル
 *.tmp
 *.temp
+
+# セキュリティ関連
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
